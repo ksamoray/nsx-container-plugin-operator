@@ -117,4 +117,3 @@ spec:
                     message:
                       description: Human readable message indicating details
                       type: string
-
