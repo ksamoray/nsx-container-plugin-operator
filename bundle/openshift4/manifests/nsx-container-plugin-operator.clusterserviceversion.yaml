@@ -1,3 +1,4 @@
+---
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
@@ -85,7 +86,7 @@ spec:
     spec:
       deployments:
       - name: nsx-ncp-operator
-        spec:
+        template:
           replicas: 1
           selector:
             matchLabels:
@@ -94,6 +95,7 @@ spec:
             metadata:
               labels:
                 name: nsx-ncp-operator
+                tier: nsx-networking
             spec:
               containers:
               - command:
@@ -111,7 +113,7 @@ spec:
                   value: nsx-ncp:latest
                 - name: WATCH_NAMESPACE
                   value: nsx-system-operator
-                image: vmware/nsx-container-plugin-operator@sha256:c8991f80178eda5da1d938607880c45d335542ddf96c9d5f3e0b94dae4fb6081
+                image: docker.io/vmware/nsx-container-plugin-operator
                 imagePullPolicy: IfNotPresent
                 name: nsx-ncp-operator
                 volumeMounts:
@@ -122,6 +124,8 @@ spec:
               tolerations:
               - effect: NoSchedule
                 key: node-role.kubernetes.io/master
+              - effect: NoSchedule
+                key: node-role.kubernetes.io/control-plane
               - effect: NoSchedule
                 key: node.kubernetes.io/not-ready
               - effect: NoSchedule

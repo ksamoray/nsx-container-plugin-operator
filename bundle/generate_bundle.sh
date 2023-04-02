@@ -57,10 +57,16 @@ cp configmap.yaml ../../bundle/openshift4/manifests
 cp lb-secret.yaml ../../bundle/openshift4/manifests
 cp nsx-secret.yaml ../../bundle/openshift4/manifests
 cp operator.nsx.vmware.com_ncpinstalls_crd.yaml ../../bundle/openshift4/manifests
+
+docker pull docker.io/vmware/nsx-container-plugin-operator:$BUNDLE_VERSION
+IMG_HASHED=$(docker inspect --format='{{index .RepoDigests 0}}' docker.io/vmware/nsx-container-plugin-operator:$BUNDLE_VERSION)
+
 faq -f yaml -o yaml --slurp \
     '.[0].spec.install = {strategy: "deployment", spec:{ deployments: [{name: .[1].metadata.name, template: .[1].spec }], permissions: [{serviceAccountName: .[3].metadata.name, rules: .[2].rules }]}} | .[0]' \
     ../../bundle/openshift4/manifests/nsx-container-plugin-operator.clusterserviceversion.yaml operator.yaml role.yaml service_account.yaml > csv.tmp.yaml && cat csv.tmp.yaml > \
     ../../bundle/openshift4/manifests/nsx-container-plugin-operator.clusterserviceversion.yaml && rm csv.tmp.yaml
+sed -i '1s/^/---\n/' ../../bundle/openshift4/manifests/nsx-container-plugin-operator.clusterserviceversion.yaml
+
 popd
 
 pushd ./bundle

@@ -1,3 +1,4 @@
+---
 apiVersion: operator.nsx.vmware.com/v1
 kind: NcpInstall
 metadata:
