@@ -47,4 +47,6 @@ spec:
             - name: NCP_IMAGE
               value: "nsx-ncp:latest"
             - name: WATCH_NAMESPACE
-              value: "nsx-system-operator"
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['olm.targetNamespaces']
